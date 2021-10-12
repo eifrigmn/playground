@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package kuaishou;
+
+option go_package= "api/protobuf/exposure/kuaishou";
+
+enum OsType {
+    UNKNOWN_OS = 0; // 未知类型
+    ANDROID = 1; // Android
+    IOS = 2; // iOS
+}
+
+enum DeviceType {
+    UNKNOWN_DEVICE = 0; // 未知类型
+    PHONE = 1; // 手机
+    TABLET = 2; // 平板
+}
+
+enum Gender {
+    UNKNOWN_GENDER = 0; // 未知
+    MALE = 1; // 男
+    FEMALE = 2; // 女
+}
+
+message Req {
+    string id = 1; // 请求唯一id
+    OsType os_type = 2; // 系统
+    string did_md5 = 3; // 安卓为 imei_md5，ios 为 idfa_md5
+    string tag_id = 4; // 广告位 ID
+
+    Gender gender = 5; // 性别
+    int32 age = 6; // 年龄段, 0(<18), 1(18~23), 2(24~30), 3(31~40), 4(41~49), 5(>50)
+    string city = 7; // 城市
+    DeviceType device_type = 8; // 机型
+    string model = 9; // 设备型号
+    string oaid = 10; //设备oaid
+    string user_agent = 11; //请求UA信息
+}
+
+message RtaResult {
+    uint64 account_id = 1; // 账号id, 必填
+    uint64 unit_id = 3; // 广告组id, 不填代表所有广告组
+    double bid_ratio = 4;   //动态出价系数
+}
+
+message Resp {
+    enum ResultType {
+        ALL = 0; // 全部都投
+        NONE = 1; // 全部不投
+        PART = 2; // 只投一部分
+    }
+    string id = 1; // 请求唯一id
+    ResultType result_type = 2; // 结果类型, 等于PART时, result必填
+    repeated RtaResult result = 3; // 允许投放的广告列表, 如有重复取并集
+    double bid_ratio = 4;   // result_type=ALL时的动态出价系数
+    repeated string label = 5; //dsp传入的标签。数据合作需求
+    uint32 refuse_time = 6; //拒绝时间
+    uint32 cache_time = 7; //缓存时间
+}

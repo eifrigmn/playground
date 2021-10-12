@@ -1,0 +1,65 @@
+syntax = "proto2";
+
+package baidu;
+
+option go_package="api/protobuf/exposure/baidu";
+
+enum ResType {
+  ALL = 0;  // 全部投放
+  NONE = 1; // 全部不投
+  PART = 2; // 只投放指定部分
+}
+
+enum OsType {
+  UNKNOWN = 0;  // 类型未知
+  ANDROID = 1;  // android
+  IOS = 2;      // ios
+}
+
+enum AndroidDeviceIdType {
+  IMEI = 1;
+  OAID = 2;
+}
+
+message DeviceInfo {
+  optional string idfa_md5 = 1;
+  optional string imei_md5 = 2;
+  optional string android_id_md5 = 3;
+  optional string oaid_md5 = 4;
+  optional string user_ip_v4 = 5;
+  optional string user_ip_v6 = 6;
+  optional string oaid = 7;
+  optional string idfa = 8;
+  optional string user_agent = 11;
+  optional string imei2_md5 = 12;
+}
+
+message RtaApiRequest {
+  required uint64 qid = 1;                              // 请求唯一标识
+  required OsType os_type = 2;                          // 操作系统类型:
+  required string device_id_md5 = 3;                    // 设备号的 md5, 设备号安卓为 imei 或 oaid（通过 android_device_type 区分），ios 为 idfa
+  required uint64 sign_time = 4;                        // 调用的时间戳, 1970-01-01 后的毫秒数
+  required string token = 5;                            // 验证令牌，其值为 md5(qid+sign_time+客户独有标识)
+  optional AndroidDeviceIdType android_device_type = 6; // android device type 用于区分 imei 或 oaid，可选
+  repeated uint64 rta_ids = 7;                          // 本次请求的策略 id 列表, DPA 请求中暂无该字段
+  optional DeviceInfo device_info = 8;                  // 用户设备信息
+}
+
+message AdResult {
+  required uint64 account_id = 1; // 账户 id，百度方分配的账户 id
+  repeated uint64 unit_id = 2; // 广告单元 id
+}
+
+message RtaStrategyAdResult {
+  required uint64 rta_id = 1;
+}
+
+message RtaApiResponse {
+  required uint64 qid = 1;
+  required ResType res = 2;
+  optional uint32 user_score = 3;   // 客户打分，可选，DPA 暂不可用
+  repeated AdResult ad_results = 4; // 指定要出的广告组，可选
+  repeated RtaStrategyAdResult strategy_results = 5;
+}
+
+

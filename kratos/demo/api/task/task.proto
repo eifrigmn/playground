@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api.task;
+
+option go_package = "demo/api/task;task";
+option java_multiple_files = true;
+option java_package = "api.task";
+
+service Task {
+    rpc CreateTask (CreateTaskRequest) returns (CreateTaskReply);
+    rpc UpdateTask (UpdateTaskRequest) returns (UpdateTaskReply);
+    rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskReply);
+    rpc GetTask (GetTaskRequest) returns (GetTaskReply);
+    rpc ListTask (ListTaskRequest) returns (ListTaskReply);
+}
+
+message CreateTaskRequest {}
+message CreateTaskReply {}
+
+message UpdateTaskRequest {}
+message UpdateTaskReply {}
+
+message DeleteTaskRequest {}
+message DeleteTaskReply {}
+
+message GetTaskRequest {}
+message GetTaskReply {}
+
+message ListTaskRequest {}
+message ListTaskReply {}

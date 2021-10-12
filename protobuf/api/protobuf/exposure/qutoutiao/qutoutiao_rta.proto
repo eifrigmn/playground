@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package qutoutiao;
+
+option go_package="api/protobuf/exposure/qutoutiao";
+
+enum OSType {
+  OS_UNKNOWN = 0;
+  ANDROID = 1;
+  IOS = 2;
+};
+
+enum DeviceIdType {
+  DEVID_UNKNOWN = 0;
+  IMEI = 1;
+  IDFA = 2;
+  ANDROIDID = 3;
+  MEID = 4;
+  OAID = 5;
+  TUID = 6;
+};
+
+enum StatusCode {
+  BID_ALL = 0; //全部参与竞价
+  BID_ABANDON = 1; //全部放弃竞价
+  BID_EXCLUDE_PART = 2; //部分id 不参与竞价
+}
+
+message DeviceId {
+  DeviceIdType type = 1; //设备ID 的类型
+  string id = 2; //设备ID
+  bool is_md5 = 3; //设备ID 是否md5 加密
+};
+
+message Device {
+  OSType os = 1; //操作系统
+  repeated DeviceId dev_id = 2; //设备ID
+}
+
+message RTARequest {
+  string req_id = 1; //请求ID， 请求唯一标识
+  string slot_id = 2; //当前流量的广告位
+  Device device = 3; //设备相关信息
+}
+
+message RTAResponse {
+  StatusCode status_code = 1; //状态码
+  repeated int64 exclude_user_id = 2; //不参与竞价的user id
+  repeated int64 exclude_unit_id = 3; //不参与竞价的unit id
+  int64 cost_time = 4; //广告主内部耗时，单位秒
+}
+

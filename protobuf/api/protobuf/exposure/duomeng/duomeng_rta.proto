@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package duomeng;
+
+option go_package="api/protobuf/exposure/duomeng";
+
+enum DeviceType {
+  UNKNOWN = 0;
+  ANDROID = 1;
+  IOS = 2;
+}
+
+message Request {
+  // 对接分配的appkey
+  string appkey = 1;
+  // 设备个数⽀持100以内
+  repeated Device device_list = 2;
+}
+
+message Response {
+  //0 表示正常， 1 表示限流， 2 表示错误
+  int32 code = 1;
+  // 当msg = code != 0 事返回
+  string msg = 2;
+  // 返回的结果，为了节省带宽，当查询的设备有⾮⽬标⽤户的时候，ret_list 中可以不返回⾮⽬标⽤户
+  repeated RetNode ret_list = 3;
+}
+
+message RetNode {
+  Device device = 1;
+  // 场景： 1 是拉新，2 是促活场景，0 表示⾮⽬标⽤户
+  int32 type = 2;
+  // 如果是促活，该字段表示沉默的天数，⾮必填
+  int32 silence_days = 3;
+}
+
+message Device {
+  // 参考DeviceType注释
+  DeviceType device_type = 1;
+  // ⽬前idfa IOS 仅⽀持IDFA
+  string idfa = 2;
+  string idfamd5 = 3;
+  string imei = 4;
+  // ⽬前安卓仅⽀持加密的imeimd5
+  string imeimd5 = 5;
+  string oaid = 6;
+}

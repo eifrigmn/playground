@@ -1,0 +1,23 @@
+syntax = "proto3";
+package vivo;
+option go_package = "api/protobuf/exposure/vivo";
+
+message Request {
+  string request_id = 1;
+  string did = 2;
+  string position_id = 3;
+  string model = 4;
+  string location = 5;
+  string user_label = 6;
+  int32 did_type = 7;
+  string ip = 8;
+  string ua = 9;
+}
+
+message Response {
+  int32 code = 1;
+  bool is_putin = 2;
+  repeated string advertiser_account = 3;
+  int32 cache_time = 5;
+  bool ac = 8;
+}
